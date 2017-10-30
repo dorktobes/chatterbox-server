@@ -2,7 +2,7 @@
 var http = require('http');
 var handleRequest = require('./request-handler');
 
-handleRequest = handleRequest.handleRequest;
+handleRequest = handleRequest.requestHandler;  
 
 
 // Every server needs to listen on a port with a unique number. The
@@ -33,7 +33,7 @@ server.listen(port, ip);
 //
 //   node basic-server.js
 //
-// on the command line.
+// on the command line. 
 //
 // To connect to the server, load http://127.0.0.1:3000 in your web
 // browser.
