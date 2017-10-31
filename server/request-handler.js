@@ -22,27 +22,23 @@ var defaultCorsHeaders = {
 var storage = {
   results: [
     {
-      username: 'patrick',
-      text: 'is killing it...?',
+      username: 'fred',
+      message: '#thumbs',
       roomname: 'lobby',
       objectId: 0
     },
     {
       username: 'dorktoby',
-      text: 'is the man, always',
+      message: 'is the man, always',
       roomname: 'lobby',
       objectId: 1
     },
     {
       username: 'jian yang',
-      text: 'did you know there\'s an app on the market?',
+      message: 'did you know there\'s an app on the market?',
       roomname: 'lobby',
       objectId: 2
     }
-    
-    
-    
-    
   ],
   counter: 3   
 };
@@ -71,9 +67,9 @@ var requestHandler = function(request, response) {
   
   
   // The outgoing status.
-  var statusCode = 200;
   
   
+  var statusCode = 404;
   
 
 
@@ -89,18 +85,27 @@ var requestHandler = function(request, response) {
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
-  response.writeHead(statusCode, headers);
+  if (request.url !== '/classes/messages' || request.url !== '/classes/room') {
+    statusCode = 201;
+    response.writeHead(statusCode, headers);
+    response.end(JSON.stringify(storage));
+  }
 
   if (request.method === 'POST') {
     let body = [];
-    request.on('data', (data) => { // what does this code do?!?
+    request
+    .on('data', (data) => { // for when data is only a middle part of a long string of datum being received
       body.push(data);
-    } ).on('end', () => {
+    } )
+    .on('end', () => {
       body = Buffer.concat(body).toString();
       body = JSON.parse(body);
+      console.log(body);
       body.objectId = storage.counter++;
       storage.results.push(body);
     });
+    statusCode = 201;
+    response.writeHead(statusCode, headers);
     response.end(JSON.stringify(storage));
     // console.log(request);
   } else if (request.method === 'GET') {
@@ -111,10 +116,20 @@ var requestHandler = function(request, response) {
     //
     // Calling .end "flushes" the response's internal buffer, forcing
     // node to actually send all the data over to the client.
+    var statusCode = 200;
+    response.writeHead(statusCode, headers);
+    response.end(JSON.stringify(storage));
+  } else if (request.method === 'PUT') { 
+    
+  } else if (request.method === 'DELETE') {
+    
+  } else if (request.method === 'OPTIONS') {
+    var statusCode = 200;
+    response.writeHead(statusCode, headers);
     response.end(JSON.stringify(storage));
   } else {
-    console.log('Other triggered');
-    response.end(JSON.stringify(storage));
+    statusCode = 404;
+    response.writeHead(statusCode, headers);
   }
 };
 
