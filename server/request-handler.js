@@ -104,7 +104,6 @@ var requestHandler = function(request, response) {
     response.end(JSON.stringify(storage));
     // console.log(request);
   } else if (request.method === 'GET') {
-    console.log('SHIT IS LIT! WE \'GET\' IT!');
     // Make sure to always call response.end() - Node may not send
     // anything back to the client until you do. The string you pass to
     // response.end() will be the body of the response - i.e. what shows
